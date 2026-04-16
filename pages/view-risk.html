@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RiskGuard - View Risk</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+    <div class="app-layout">
+        <div id="sidebar-container"></div>
+        <div class="main-content">
+            <div class="header" style="margin-bottom: 32px;">
+                <div style="display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
+                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary-color);">Risk Detail</div>
+                    <div style="margin-left:10px; font-size: 1rem; color: var(--text-muted);">
+                        <a href="projects.html">Projects</a> / <a id="projectLink" href="#">Project</a> / <span style="color: var(--primary-color);">Risk Detail</span>
+                    </div>
+                </div>
+                <div style="margin-top: 10px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                    <h1 id="riskTitle" class="title-tight" style="margin: 0; font-size: 2rem;">Loading...</h1>
+                    <span id="riskId" class="meta-subtext" style="font-size: 0.95rem; color: var(--text-soft);"></span>
+                    <a id="editBtn" href="#" class="btn btn-primary btn-auto">Edit Risk</a>
+                    <a id="historyBtn" href="#" class="btn btn-auto">View History Page</a>
+                </div>
+            </div>
+
+            <div id="loader" role="status" aria-live="polite">Loading Details...</div>
+            <div id="viewRiskMessage" class="status-message" role="alert" aria-live="polite"></div>
+
+            <div class="risk-details-flex block-hidden" id="detailsWrapper" style="display: flex; gap: 32px; flex-wrap: wrap; align-items: flex-start;">
+                <div style="flex: 2 1 340px; min-width: 320px;">
+                    <div class="card" style="margin-bottom: 24px;">
+                        <h3 style="margin-bottom: 10px;">Description</h3>
+                        <p id="riskDesc" style="font-size: 1.08rem; color: var(--text-color);"></p>
+                    </div>
+                    <div class="card" style="margin-bottom: 24px;">
+                        <h3 style="margin-bottom: 10px;">Mitigation Plan</h3>
+                        <p id="riskMitigation" style="font-size: 1.08rem; color: var(--text-color);"></p>
+                    </div>
+                </div>
+                <div style="flex: 1 1 280px; min-width: 260px;">
+                    <div class="card" style="margin-bottom: 24px;">
+                        <h3 style="margin-bottom: 10px;">Risk Parameters</h3>
+                        <ul class="list-plain" style="font-size: 1rem;">
+                            <li style="margin-bottom: 8px;"><strong>Status:</strong> <span id="riskStatus" class="badge"></span></li>
+                            <li style="margin-bottom: 8px;"><strong>Probability:</strong> <span id="riskProb" class="badge badge-low"></span></li>
+                            <li style="margin-bottom: 8px;"><strong>Impact:</strong> <span id="riskImpact" class="badge badge-low"></span></li>
+                            <li style="margin-bottom: 8px;"><strong>Creator:</strong> <span id="riskCreator"></span></li>
+                            <li style="margin-bottom: 8px;"><strong>Created:</strong> <span id="riskDate"></span></li>
+                        </ul>
+                        <hr class="separator">
+                        <h4 style="margin-bottom: 8px;">Quick Status Update</h4>
+                        <select id="quickStatusUpdate" class="form-control control-spaced" style="margin-bottom: 10px;">
+                            <option value="Open">Open</option>
+                            <option value="Monitoring">Monitoring</option>
+                            <option value="Mitigated">Mitigated</option>
+                            <option value="Closed">Closed</option>
+                        </select>
+                        <button id="updateStatusBtn" class="btn btn-primary" style="width: 100%;">Update Status</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card section-card" id="historySection">
+                <div class="header header-compact">
+                    <h2 class="title-none">Full History Timeline</h2>
+                </div>
+                <div id="historyLoader" role="status" aria-live="polite">Loading History...</div>
+                <div class="timeline block-hidden" id="riskHistoryTimeline"></div>
+            </div>
+
+            <div class="modal-backdrop" id="statusModalBackdrop" hidden></div>
+            <div class="modal" id="statusModal" aria-hidden="true" hidden>
+                <div class="modal__header">
+                    <h3 class="title-none">Update Risk Status</h3>
+                    <button type="button" class="modal__close" id="closeStatusModalBtn" aria-label="Close status modal">&times;</button>
+                </div>
+                <div class="form-group">
+                    <label for="modalStatusSelect">Status</label>
+                    <select id="modalStatusSelect" class="form-control">
+                        <option value="Open">Open</option>
+                        <option value="Monitoring">Monitoring</option>
+                        <option value="Mitigated">Mitigated</option>
+                        <option value="Closed">Closed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="modalStatusNote">Status Note</label>
+                    <textarea id="modalStatusNote" class="form-control" rows="3" placeholder="Add context for this status update"></textarea>
+                </div>
+                <div class="card-inline-actions">
+                    <button type="button" class="btn btn-primary" id="confirmStatusBtn">Update Status</button>
+                    <button type="button" class="btn" id="cancelStatusModalBtn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../js/auth.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/risks.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            requireAuth();
+            loadSidebar();
+            initViewRisk();
+        });
+    </script>
+</body>
+</html>
+

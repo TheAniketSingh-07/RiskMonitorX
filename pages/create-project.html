@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RiskGuard - Create Project</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+    <div class="app-layout">
+        <div id="sidebar-container"></div>
+        <div class="main-content">
+            <div class="header">
+                <div>
+                    <div class="breadcrumb"><a href="projects.html">Projects</a> / Create Project</div>
+                    <h1 style="margin:0;">Create Project</h1>
+                </div>
+            </div>
+
+            <div class="card" style="max-width: 800px;">
+                <form id="createProjectForm">
+                    <div class="form-group">
+                        <label for="projectTitle">Title</label>
+                        <input type="text" id="projectTitle" class="form-control" autocomplete="organization" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="projectDescription">Description</label>
+                        <textarea id="projectDescription" class="form-control" rows="5"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="projectStartDate">Start Date</label>
+                            <input type="date" id="projectStartDate" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="projectEndDate">End Date</label>
+                            <input type="date" id="projectEndDate" class="form-control" required />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="saveProjectBtn">Create Project</button>
+                    <div id="createProjectMessage" class="status-message" role="alert" aria-live="polite"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="../js/auth.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/project.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            requireAuth();
+            loadSidebar();
+            initCreateProjectForm();
+        });
+    </script>
+</body>
+</html>
+

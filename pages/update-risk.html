@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RiskGuard - Update Risk</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+    <div class="app-layout">
+        <div id="sidebar-container"></div>
+        <div class="main-content">
+            <div class="header">
+                <h1>Update Risk</h1>
+            </div>
+            
+            <div class="card" style="max-width: 800px;">
+                <div id="loader" role="status" aria-live="polite">Loading Risk Data...</div>
+                <form id="updateRiskForm" style="display:none;">
+                    <div class="form-group">
+                        <label for="title">Risk Title</label>
+                        <input type="text" id="title" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" class="form-control" rows="4"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="probability">Probability</label>
+                            <select id="probability" class="form-control" required>
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="impact">Impact</label>
+                            <select id="impact" class="form-control" required>
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                                <option value="Critical">Critical</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="mitigationPlan">Mitigation Actions</label>
+                        <textarea id="mitigationPlan" class="form-control" rows="4" required></textarea>
+                    </div>
+                    
+                    <div class="card-inline-actions">
+                         <button type="submit" class="btn btn-primary" id="saveBtn" style="flex:1;">Save Changes</button>
+                         <button type="button" class="btn btn-danger" id="delBtn" style="flex:1;">Delete Risk</button>
+                    </div>
+                    <div id="updateFormMessage" class="status-message" role="alert" aria-live="polite"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="../js/auth.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/risks.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            requireAuth();
+            loadSidebar();
+            initUpdateForm();
+        });
+    </script>
+</body>
+</html>
+

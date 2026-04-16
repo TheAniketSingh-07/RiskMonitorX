@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RiskGuard - Dashboard</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .metric-card {
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .metric-header {
+            font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;
+        }
+        .metric-header .icon {
+            width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+        }
+        .metric-icon-blue { background: rgba(74, 144, 226, 0.15); color: var(--primary-color); }
+        .metric-icon-red { background: rgba(229, 57, 53, 0.15); color: var(--danger); }
+        .metric-icon-green { background: rgba(76, 175, 80, 0.15); color: var(--success); }
+        
+        .metric-main {
+            font-size: 2.2rem; font-weight: 800; margin: 0 0 8px 0; line-height: 1; color: var(--text-color);
+        }
+        .metric-footer {
+            font-size: 0.8rem;
+        }
+        .text-green { color: var(--success); }
+        .text-red { color: var(--danger); }
+
+
+        .matrix-grid {
+            display: grid; grid-template-columns: 60px 1fr 1fr 1fr; gap: 10px; margin-top: 20px;
+        }
+        .matrix-label {
+            font-size: 0.7rem; color: var(--text-muted); display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 600;
+        }
+        .matrix-cell {
+            border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; height: 48px; font-weight: bold; font-size: 1.1rem;
+        }
+        .bg-green { background: var(--success); color: white; opacity: 0.5; }
+        .bg-orange { background: var(--warning); color: white; opacity: 0.8; }
+        .bg-red { background: var(--danger); color: white; }
+        .bg-blue { background: var(--primary-hover); color: white; opacity: 0.5; }
+        /* Real matrix classes based on likelihood/impact */
+        .c-1 { background: #4caf50; opacity: 0.6; }
+        .c-2 { background: #ffa000; opacity: 0.7; }
+        .c-3 { background: #ffa000; opacity: 0.9; }
+        .c-4 { background: #e53935; opacity: 0.9; }
+        .c-inactive { background: #3a3f57; opacity: 0.4; } /* No risks */
+    </style>
+</head>
+<body>
+    <div class="app-layout">
+        <div id="sidebar-container"></div>
+        <div class="main-content">
+            <div class="header">
+                <div>
+                    <h1 style="font-size: 1.25rem;">Dashboard</h1>
+                    <p style="margin: 4px 0 0; font-size: 0.85rem; color: var(--text-muted);">Overview of your risk landscape</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div style="position: relative; color: var(--text-muted); cursor: pointer;">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                    <div style="position: relative; color: var(--text-muted); cursor: pointer;">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                        <span class="badge-notification" style="display:none; position: absolute; top: 0px; right: 0px; background: var(--danger); width: 10px; height: 10px; border-radius: 50%; border: 2px solid white;"></span>
+                    </div>
+                    <div style="background: var(--primary-color); color: white; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem;">
+                        AS
+                    </div>
+                </div>
+            </div>
+            
+            <div id="loader" role="status" aria-live="polite">Loading Dashboard Data...</div>
+            
+            <div id="dashboard-content" style="display: none;">
+                <!-- Key Metrics -->
+                <div class="dashboard-metrics-grid">
+                    <div class="card metric-card">
+                        <div class="metric-header">
+                            <span>TOTAL RISKS</span>
+                            <div class="icon metric-icon-blue">🛡️</div>
+                        </div>
+                        <div>
+                            <h2 class="metric-main" id="dashTotalRisks">0</h2>
+                            <span class="metric-footer text-green">+2 this month</span>
+                        </div>
+                    </div>
+                    <div class="card metric-card">
+                        <div class="metric-header">
+                            <span>CRITICAL RISKS</span>
+                            <div class="icon metric-icon-red">⚠️</div>
+                        </div>
+                        <div>
+                            <h2 class="metric-main" id="dashCriticalRisks">0</h2>
+                            <span class="metric-footer text-red">Needs attention</span>
+                        </div>
+                    </div>
+                    <div class="card metric-card">
+                        <div class="metric-header">
+                            <span>OPEN RISKS</span>
+                            <div class="icon metric-icon-blue">⌚</div>
+                        </div>
+                        <div>
+                            <h2 class="metric-main" id="dashOpenRisks">0</h2>
+                            <span class="metric-footer text-green">-1 from last week</span>
+                        </div>
+                    </div>
+                    <div class="card metric-card">
+                        <div class="metric-header">
+                            <span>MITIGATING</span>
+                        </div>
+                        <div>
+                            <h2 class="metric-main" id="dashMitigatedRisks">0</h2>
+                            <span class="metric-footer" style="color: var(--text-muted);">In progress</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid-main">
+                    <!-- Trend Chart -->
+                    <div class="card" style="margin-bottom: 0;">
+                        <div style="display:flex; justify-content:space-between;">
+                            <h3 style="margin-top:0;">Risk Trend</h3>
+                            <span style="color:var(--text-muted); cursor:pointer;">📈</span>
+                        </div>
+                        <div style="height: 250px; width: 100%; position: relative;">
+                            <canvas id="riskTrendChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Matrix -->
+                    <div class="card" style="margin-bottom: 0;">
+                        <h3 style="margin-top:0;">Risk Assessment Matrix</h3>
+                        <div class="matrix-grid">
+                            <div></div>
+                            <div class="matrix-label">Low</div>
+                            <div class="matrix-label">Medium</div>
+                            <div class="matrix-label">High</div>
+
+                            <div class="matrix-label" style="justify-content:flex-end; padding-right:8px;">Very Likely</div>
+                            <div class="matrix-cell c-inactive" id="mat-vl-l">0</div>
+                            <div class="matrix-cell c-inactive" id="mat-vl-m">0</div>
+                            <div class="matrix-cell c-inactive" id="mat-vl-h">0</div>
+
+                            <div class="matrix-label" style="justify-content:flex-end; padding-right:8px;">Likely</div>
+                            <div class="matrix-cell c-inactive" id="mat-l-l">0</div>
+                            <div class="matrix-cell c-inactive" id="mat-l-m">0</div>
+                            <div class="matrix-cell c-inactive" id="mat-l-h">0</div>
+
+                            <div class="matrix-label" style="justify-content:flex-end; padding-right:8px;">Possible</div>
+                            <div class="matrix-cell c-inactive" id="mat-p-l">0</div>
+                            <div class="matrix-cell c-inactive" id="mat-p-m">0</div>
+                            <div class="matrix-cell c-inactive" id="mat-p-h">0</div>
+
+                            <div class="matrix-label" style="justify-content:flex-end; padding-right:8px;">Unlikely</div>
+                            <div class="matrix-cell c-inactive" id="mat-u-l">0</div>
+                            <div class="matrix-cell c-inactive" id="mat-u-m">0</div>
+                            <div class="matrix-cell c-inactive" id="mat-u-h">0</div>
+                        </div>
+                        <div style="text-align: right; font-size: 0.65rem; color: var(--text-muted); margin-top: 10px;">Impact / Severity →</div>
+                    </div>
+                </div>
+
+                <!-- Recent Risks -->
+                <div class="card">
+                    <h3 style="margin-top:0;">Recent Risks</h3>
+                    <div class="table-wrap">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>RISK</th>
+                                    <th>PROJECT</th>
+                                    <th>SEVERITY</th>
+                                    <th>STATUS</th>
+                                    <th>OWNER</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentRisksTbody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+        <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+        <script src="../js/auth.js"></script>
+        <script src="../js/theme.js"></script>
+        <script src="../js/api.js"></script>
+        <script src="../js/notifications.js"></script>
+        <script src="../js/dashboard-metrics.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+                if (user && user._id) {
+                    connectNotifications(user._id);
+                }
+            });
+        </script>
+</body>
+</html>

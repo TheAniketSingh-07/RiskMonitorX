@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RiskGuard - Settings</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <style>
+        .settings-card {
+            background: linear-gradient(160deg, rgba(39, 47, 74, 0.3), rgba(28, 33, 51, 0.4)), var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 24px 28px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+        }
+        .settings-card h3 {
+            font-size: 1.1rem; margin-top: 0; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 14px;
+        }
+        
+        .settings-row {
+            display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;
+        }
+        .settings-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .settings-info {
+            flex: 1;
+        }
+        .settings-info h4 {
+            margin: 0 0 4px 0; font-size: 0.95rem; font-weight: 600;
+        }
+        .settings-info p {
+            margin: 0; font-size: 0.85rem; color: var(--text-muted);
+        }
+
+        /* Toggle Switch CSS */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--border-color);
+            transition: .3s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-layout">
+        <div id="sidebar-container"></div>
+        <div class="main-content">
+            <div class="header">
+                <div>
+                    <h1 style="font-size: 1.25rem;">Settings</h1>
+                    <p style="margin: 4px 0 0; font-size: 0.85rem; color: var(--text-muted);">Manage your account and preferences</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div style="position: relative; color: var(--text-muted); cursor: pointer;">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                    <div style="position: relative; color: var(--text-muted); cursor: pointer;">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                        <span style="position: absolute; top: 0px; right: 0px; background: var(--danger); width: 8px; height: 8px; border-radius: 50%;"></span>
+                    </div>
+                    <div style="background: var(--primary-color); color: white; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem;">
+                        AS
+                    </div>
+                </div>
+            </div>
+            
+            <div style="max-width: 800px; padding-top: 10px;">
+                <!-- Profile Block -->
+                <div class="settings-card">
+                    <h3>Profile</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="profileName" style="color:var(--text-muted); text-transform:none; font-weight:600;">Full Name</label>
+                            <input type="text" id="profileName" class="form-control" value="Aniket Singh" style="background:rgba(255,255,255,0.03);" />
+                        </div>
+                        <div class="form-group">
+                            <label for="profileEmail" style="color:var(--text-muted); text-transform:none; font-weight:600;">Email</label>
+                            <input type="email" id="profileEmail" class="form-control" value="thakuraniket47034@gmail.com" style="background:rgba(255,255,255,0.03);" />
+                        </div>
+                    </div>
+                    <button id="saveProfileBtn" class="btn" style="background: var(--card-hover); color: var(--text-color); border: 1px solid var(--border-color); width: auto; margin-top:10px;">Save Changes</button>
+                </div>
+
+                <!-- Appearance Block -->
+                <div class="settings-card">
+                    <h3>Appearance</h3>
+                    <div class="settings-row">
+                        <div class="settings-info">
+                            <h4>Dark Mode</h4>
+                            <p>Toggle between dark and light theme</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="appearanceToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Notifications Block -->
+                <div class="settings-card">
+                    <h3>Notifications</h3>
+                    <div class="settings-row">
+                        <div class="settings-info">
+                            <h4>Email notifications for critical risks</h4>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="emailNotifToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-row">
+                        <div class="settings-info">
+                            <h4>Weekly risk summary reports</h4>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="weeklyReportToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-row">
+                        <div class="settings-info">
+                            <h4>Project status change alerts</h4>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="projectAlertToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../js/auth.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/settings.js"></script>
+</body>
+</html>

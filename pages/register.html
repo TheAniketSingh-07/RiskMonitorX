@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RiskGuard - Register</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="card auth-card">
+            <h2>Create Account</h2>
+            <form id="regForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" class="form-control" autocomplete="name" minlength="2" required />
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="form-control" autocomplete="email" required />
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" autocomplete="new-password" minlength="8" required />
+                </div>
+                <button type="submit" class="btn btn-primary" id="regBtn">Sign Up</button>
+                <div id="regMessage" class="status-message" role="alert" aria-live="polite"></div>
+            </form>
+            <p style="text-align: center; margin-top: 15px; font-size: 14px;">
+                Already have an account? <a href="login.html">Login</a>
+            </p>
+        </div>
+    </div>
+    <script src="../js/auth.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        requireGuest();
+        document.getElementById('regForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('regBtn');
+            const messageEl = document.getElementById('regMessage');
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            messageEl.className = 'status-message';
+            messageEl.textContent = '';
+            btn.textContent = 'Loading...';
+            btn.disabled = true;
+            try {
+                const data = await fetchAPI('/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        password
+                    })
+                });
+                if (typeof setAuthToken === 'function') {
+                    setAuthToken(data.token, false);
+                } else {
+                    sessionStorage.setItem('token', data.token);
+                }
+                window.location.href = 'projects.html';
+            } catch (err) {
+                messageEl.className = 'status-message error';
+                messageEl.textContent = err.message || 'Registration failed. Please try again.';
+            } finally {
+                btn.textContent = 'Sign Up';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
+
+

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RiskGuard - Create Risk</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+    <div class="app-layout">
+        <div id="sidebar-container"></div>
+        <div class="main-content">
+            <div class="header">
+                <div>
+                    <div class="breadcrumb"><a href="projects.html">Projects</a> / <a id="projectLink" href="projects.html">Loading project...</a> / Create Risk</div>
+                    <h1 class="title-none">Create New Risk</h1>
+                </div>
+            </div>
+            
+            <div class="card card-constrained-spaced">
+                <h3 id="projectName" class="title-top-none">Loading project...</h3>
+                <p id="projectContext" class="title-none text-muted">Risks can only be created inside a project.</p>
+            </div>
+
+            <div class="card card-constrained">
+                <form id="createRiskForm">
+                    <div class="form-group">
+                        <label for="title">Risk Title</label>
+                        <input type="text" id="title" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" class="form-control" rows="4"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="probability">Probability</label>
+                            <select id="probability" class="form-control" required>
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="impact">Impact</label>
+                            <select id="impact" class="form-control" required>
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                                <option value="Critical">Critical</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="mitigationPlan">Mitigation Actions</label>
+                        <textarea id="mitigationPlan" class="form-control" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="currentStatus">Initial Current Status</label>
+                        <select id="currentStatus" class="form-control" required>
+                            <option value="Open">Open</option>
+                            <option value="Monitoring">Monitoring</option>
+                            <option value="Mitigated">Mitigated</option>
+                            <option value="Closed">Closed</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="saveBtn">Save Risk</button>
+                    <div id="createFormMessage" class="status-message" role="alert" aria-live="polite"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="../js/auth.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/risks.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            requireAuth();
+            loadSidebar();
+            initCreateForm();
+        });
+    </script>
+</body>
+</html>
+
+

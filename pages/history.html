@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RiskGuard - History</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+    <div class="app-layout">
+        <div id="sidebar-container"></div>
+        <div class="main-content">
+            <div class="header">
+                <h1>Risk History Timeline</h1>
+                <a id="backBtn" href="risks.html" class="btn btn-auto">&larr; Back to Risk</a>
+            </div>
+            
+            <div class="card card-constrained">
+                <div id="loader" role="status" aria-live="polite">Loading History...</div>
+                <div class="timeline block-hidden" id="timelineList"></div>
+            </div>
+        </div>
+    </div>
+    <script src="../js/auth.js"></script>
+    <script src="../js/theme.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/risks.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            requireAuth();
+            loadSidebar();
+            initHistory();
+        });
+    </script>
+</body>
+</html>
+
