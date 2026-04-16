@@ -1,0 +1,490 @@
+openapi: 3.0.3
+info:
+  title: Risk Management API
+  version: 1.0.0
+  description: Project-first risk management backend with status history tracking.
+servers:
+  - url: https://your-domain.com
+security:
+  - bearerAuth: []
+tags:
+  - name: Projects
+  - name: Risks
+paths:
+  /api/projects:
+    post:
+      tags: [Projects]
+      summary: Create project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectCreateRequest'
+      responses:
+        '201':
+          description: Project created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    get:
+      tags: [Projects]
+      summary: List projects
+      responses:
+        '200':
+          description: Project list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  count: { type: integer }
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Project'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/projects/{projectId}:
+    parameters:
+      - in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Projects]
+      summary: Get project by id
+      responses:
+        '200':
+          description: Project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    put:
+      tags: [Projects]
+      summary: Update project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectUpdateRequest'
+      responses:
+        '200':
+          description: Updated project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      tags: [Projects]
+      summary: Delete project and cascade delete risks
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data: { type: object }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/projects/{projectId}/risks:
+    parameters:
+      - in: path
+        name: projectId
+        required: true
+        schema:
+          type: string
+    post:
+      tags: [Risks]
+      summary: Create risk under project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RiskCreateRequest'
+      responses:
+        '201':
+          description: Risk created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RiskResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    get:
+      tags: [Risks]
+      summary: List risks in project
+      responses:
+        '200':
+          description: Risk list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  count: { type: integer }
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Risk'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/risks/{riskId}:
+    parameters:
+      - in: path
+        name: riskId
+        required: true
+        schema:
+          type: string
+    get:
+      tags: [Risks]
+      summary: Get risk by id
+      responses:
+        '200':
+          description: Risk
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RiskResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    put:
+      tags: [Risks]
+      summary: Update risk details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RiskUpdateRequest'
+      responses:
+        '200':
+          description: Updated risk
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RiskResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      tags: [Risks]
+      summary: Delete risk
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data: { type: object }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/risks/{riskId}/status:
+    patch:
+      tags: [Risks]
+      summary: Update risk status and append history
+      parameters:
+        - in: path
+          name: riskId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatusUpdateRequest'
+      responses:
+        '200':
+          description: Status updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  message: { type: string }
+                  data:
+                    type: object
+                    properties:
+                      id: { type: string }
+                      currentStatus: { $ref: '#/components/schemas/RiskStatus' }
+                      updatedAt: { type: string, format: date-time }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /api/risks/{riskId}/history:
+    get:
+      tags: [Risks]
+      summary: Get risk history descending by timestamp
+      parameters:
+        - in: path
+          name: riskId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: History list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  count: { type: integer }
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/HistoryEntry'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    RiskStatus:
+      type: string
+      enum: [Open, Monitoring, Mitigated, Closed]
+
+    Probability:
+      type: string
+      enum: [Low, Medium, High]
+
+    Impact:
+      type: string
+      enum: [Low, Medium, High, Critical]
+
+    Project:
+      type: object
+      properties:
+        _id: { type: string }
+        title: { type: string }
+        description: { type: string }
+        owner:
+          oneOf:
+            - type: string
+            - type: object
+        startDate: { type: string, format: date-time }
+        endDate: { type: string, format: date-time }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    ProjectCreateRequest:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string }
+        description: { type: string }
+        owner:
+          oneOf:
+            - type: string
+            - type: object
+        startDate: { type: string, format: date-time }
+        endDate: { type: string, format: date-time }
+
+    ProjectUpdateRequest:
+      type: object
+      properties:
+        title: { type: string }
+        description: { type: string }
+        owner:
+          oneOf:
+            - type: string
+            - type: object
+        startDate: { type: string, format: date-time }
+        endDate: { type: string, format: date-time }
+
+    HistoryEntry:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/RiskStatus'
+        note: { type: string }
+        changedBy:
+          oneOf:
+            - type: string
+            - type: object
+        timestamp: { type: string, format: date-time }
+
+    Risk:
+      type: object
+      properties:
+        _id: { type: string }
+        projectId: { type: string }
+        title: { type: string }
+        description: { type: string }
+        probability:
+          $ref: '#/components/schemas/Probability'
+        impact:
+          $ref: '#/components/schemas/Impact'
+        mitigationActions: { type: string }
+        currentStatus:
+          $ref: '#/components/schemas/RiskStatus'
+        createdBy:
+          oneOf:
+            - type: string
+            - type: object
+        updatedBy:
+          oneOf:
+            - type: string
+            - type: object
+        history:
+          type: array
+          items:
+            $ref: '#/components/schemas/HistoryEntry'
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    RiskCreateRequest:
+      type: object
+      required: [title, probability, impact, mitigationActions]
+      properties:
+        title: { type: string }
+        description: { type: string }
+        probability:
+          $ref: '#/components/schemas/Probability'
+        impact:
+          $ref: '#/components/schemas/Impact'
+        mitigationActions: { type: string }
+        currentStatus:
+          $ref: '#/components/schemas/RiskStatus'
+        note: { type: string }
+
+    RiskUpdateRequest:
+      type: object
+      properties:
+        title: { type: string }
+        description: { type: string }
+        probability:
+          $ref: '#/components/schemas/Probability'
+        impact:
+          $ref: '#/components/schemas/Impact'
+        mitigationActions: { type: string }
+        currentStatus:
+          $ref: '#/components/schemas/RiskStatus'
+        note: { type: string }
+
+    StatusUpdateRequest:
+      type: object
+      required: [status]
+      properties:
+        status:
+          $ref: '#/components/schemas/RiskStatus'
+        note: { type: string }
+
+    ProjectResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          $ref: '#/components/schemas/Project'
+
+    RiskResponse:
+      type: object
+      properties:
+        success: { type: boolean }
+        data:
+          $ref: '#/components/schemas/Risk'
+
+    ErrorResponse:
+      type: object
+      properties:
+        success: { type: boolean, example: false }
+        message: { type: string }
+        path: { type: string }
+        timestamp: { type: string, format: date-time }
+        stack:
+          oneOf:
+            - type: string
+            - type: 'null'
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
