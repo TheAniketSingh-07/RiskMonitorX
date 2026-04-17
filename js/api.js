@@ -1,5 +1,5 @@
 // Replace BASE_URL with your backend host if needed (keep trailing /api).
-const API_BASE = 'http://localhost:5000/api/v1';
+const API_BASE = 'https://riskmonitorx-1.onrender.com/api/v1';
 const API_TIMEOUT_MS = 15000;
 const TOKEN_KEY = 'token';
 
