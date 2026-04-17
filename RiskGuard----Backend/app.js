@@ -39,7 +39,7 @@ app.use(helmet());
 // }));
 
 app.use(cors({
-  origin: 'https://projectmanagerguardapp.netlify.app',
+  origin: 'https://riskmonitorx.vercel.app/',
   credentials: true, // if you use cookies or authentication headers
 }));
 
